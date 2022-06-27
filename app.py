@@ -1,13 +1,16 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    user_response = ' '
+    if request.method == 'POST':
+        user_response = request.form['word']
+    return render_template('index.html', user_response=user_response)
 
 @app.route('/dashboard')
-def about():
+def dashboard():
     return render_template('dashboard.html')
 
 # @app.route('/greet')
