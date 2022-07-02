@@ -18,7 +18,7 @@ html {
     font-weight: bold;
     letter-spacing: 2px;
   }
-
+/* home page */
   .container-fluid > .row{
     padding: 60px 50px 0 50px;
   }
@@ -63,6 +63,45 @@ html {
     resize: none;
     height: 200px;
     background-color: #ffede5;
+  }
+
+  /* dashboard */
+  .row > h2 {
+    margin-top: -50px;
+    margin-left: 275px;
+    color: #34325e;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+  }
+
+  aside{
+    height: 100%;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    border-right: solid black 5px;
+    overflow-x: hidden;
+  }
+
+  aside > a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+  }
+
+  main {
+    overflow-y:  scroll;
+    height: 100vh;
+    padding-left: 60px;
+  }
+
+  .side-active {
+    text-shadow: 2px 2px;
+  }
+
+  .sidenav > div {
+    margin-left: -15px;
   }
 
   .footer {

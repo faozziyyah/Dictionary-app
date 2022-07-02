@@ -9,5 +9,53 @@ class="active"
 {% endblock %}
 
 {% block content %}
-<h1 style='color: red;'>dashboard page!</h1>
+<div class="row">
+
+    <h2>Word Index</h2>
+
+    <aside class="col-md-2 sidenav">
+        <a href="#" class="side-active" id="word-index">All Words</a>
+        <a href="#" id="word-add">Add New</a>
+        <div>
+            <form action="javascript:0" id="word-form">
+                <div class="form-group">
+                    <label for="word">Word:</label>
+                    <input type="text" class="form-control" name="word" id="word" placeholder="Type in the word here:" required />
+                </div>
+                <div class="form-group">
+                    <label for="word">Meaning:</label>
+                    <textarea class="form-control" id="meaning" placeholder="Type the meaning of the word here" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit">Submit</button>
+                <button type="button" class="btn btn-warning btn-block btn-lg" id="cancel">Cancel</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="col-md-10">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>Word</th>
+                    <th>Meaning</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for word in words %}
+                <tr>
+                    <th>{{ loop.index }}</th>
+                    <th>{{ word['word'] }}</th>
+                    <th>{{ word['meaning'] }}</th>
+                </tr>
+            </tbody>
+            {% else %}
+            <tr>
+                <td colspan="3">The dictionary has no words at the moment, please try again later.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
+
+</div>
 {% endblock %}
