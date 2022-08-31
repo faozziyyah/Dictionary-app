@@ -1,18 +1,13 @@
 import os
 from flask import Flask, render_template, request, flash, current_app
-from flaskext.mysql import MySQL
-import pymysql.cursors
-import json
+import datetime, json, psycopg2
 
 app = Flask(__name__)
 
 app.secret_key = 'secret'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_DB'] = 'dictionary'
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '@OPEyemi2001'
-
-mysql = MySQL(app, cursorclass=pymysql.cursors.DictCursor)
+def get_db_connection():
+  conn = psycopg2.connect("dbname=dictionary user=postgres password=opeyemi2001 host=localhost")
+  return conn
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -22,9 +17,9 @@ def index():
         if user_input == ' ':
             flash("You did not enter a valid word, please try again.")
         else:
-            conn = mysql.get_db()
+            conn = get_db_connection()
             cur = conn.cursor()
-            cur.execute('select meaning from word where word=%s', (user_input))
+            cur.execute('select meaning from firstdict where word=%s', (user_input))
             rv = cur.fetchall()
             if (len(rv) > 0):
                 user_response = rv[0]['meaning']
@@ -35,9 +30,9 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
-    conn = mysql.get_db()
+    conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('select * from word')
+    cur.execute('select * from firstdict')
     rv = cur.fetchall()
     for item in rv:
         print(item)
@@ -51,9 +46,9 @@ def add_word():
     if  word == ' ' or meaning == ' ':
         flash('Please fill in all fields to add a new word')
     else:
-        conn = mysql.get_db()
+        conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute('insert into word(word, meaning) VALUES (%s, %s)', (word, meaning))
+        cur.execute('insert into firstdict(word, meaning) VALUES (%s, %s)', (word, meaning))
         conn.commit()
         cur.close()
         flash('word successfully added!')
@@ -63,9 +58,9 @@ def add_word():
 @app.route('/word/<id>/delete', methods=['POST'])
 def delete_word(id):
     word_id = id
-    conn = mysql.get_db()
+    conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(' delete from word where id=%s ', (word_id))
+    cur.execute(' delete from firstdict where id=%s ', (word_id))
     conn.commit()
     cur.close()
     flash('word successfully deleted!')
@@ -81,9 +76,9 @@ def edit_word(id):
     if  word == ' ' or meaning == ' ':
         flash('Please fill in all fields to update a word')
     else:
-        conn = mysql.get_db()
+        conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute(' update word set word=%s, meaning=%s where id=%s ', (word, meaning, word_id))
+        cur.execute(' update firstdict set word=%s, meaning=%s where id=%s ', (word, meaning, word_id))
         conn.commit()
         cur.close()
         flash('word successfully updated')
