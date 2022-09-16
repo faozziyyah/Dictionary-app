@@ -1,6 +1,6 @@
 # Dictionary-App
 
-My first full stack CRUD web application built with Python, MySQL, and Flask framework.
+My first full stack CRUD web application built with Python, PostgreSQL, and Flask framework.
 
 ## Table of contents
 
@@ -35,7 +35,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: (https://github.com/faozziyyah/Dictionary-app)
-- Live link: (Not yet available)
+- Live link: (https://ustackydict1.herokuapp.com/)
 
 ## My process
 
@@ -45,7 +45,7 @@ Users should be able to:
 - CSS
 - Javascript
 - [Flask](https://flask.palletsprojects.com/en/2.1.x/) - A web development microframework built with python
-- MySQL
+- PostgreSQL
 
 ### What I learned
 
