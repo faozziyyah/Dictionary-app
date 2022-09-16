@@ -1,12 +1,12 @@
 import os
-from flask import Flask, render_template, request, flash, current_app
+from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 import datetime, json, psycopg2
 
 app = Flask(__name__)
 
 app.secret_key = 'secret'
 def get_db_connection():
-  conn = psycopg2.connect("dbname=dictionary user=postgres password=opeyemi2001 host=localhost")
+  conn = psycopg2.connect("postgres://kgqrxzyrtsuoag:a84393990d6bbad0365b98b7389f64b88fb4f2d5308b31e0bda1d522faa482b8@ec2-44-205-64-253.compute-1.amazonaws.com:5432/d84mkmj7qcnmon")
   return conn
 
 @app.route('/', methods=['GET', 'POST'])
@@ -19,10 +19,10 @@ def index():
         else:
             conn = get_db_connection()
             cur = conn.cursor()
-            cur.execute('select meaning from firstdict where word=%s', (user_input))
+            cur.execute('select meaning from firstdict where UPPER(word) = %s', (user_input.upper(), ))
             rv = cur.fetchall()
             if (len(rv) > 0):
-                user_response = rv[0]['meaning']
+                user_response = rv[0][0]
             else:
                 flash("The word cannot be found in this dictionary, please try again with another word.")
         
@@ -38,53 +38,57 @@ def dashboard():
         print(item)
     return render_template('dashboard.html', words=rv)
 
-@app.route('/word', methods=['POST'])
-def add_word():
-    req = request.get_json()
-    word = req['word']
-    meaning = req['meaning']
-    if  word == ' ' or meaning == ' ':
-        flash('Please fill in all fields to add a new word')
-    else:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('insert into firstdict(word, meaning) VALUES (%s, %s)', (word, meaning))
-        conn.commit()
-        cur.close()
-        flash('word successfully added!')
+@app.route('/insert', methods=['POST'])
+def insert():
+   # req = request.get_json()
+   if request.method == "POST":
+       id = request.form['id']
+       word = request.form['word']
+       meaning = request.form['meaning']
+       if  word == ' ' or meaning == ' ':
+           flash('Please fill in all fields to add a new word')
+       else:
+           conn = get_db_connection()
+           cur = conn.cursor()
+           cur.execute('insert into firstdict(id, word, meaning) VALUES (%s, %s, %s)', (id, word, meaning))
+           conn.commit()
+           cur.close()
+           flash('word successfully added!')
 
-    return json.dumps('success')
+           return redirect(url_for('dashboard'))
+       return redirect(url_for('dashboard'))
 
-@app.route('/word/<id>/delete', methods=['POST'])
-def delete_word(id):
-    word_id = id
+@app.route('/delete/<string:id_data>')
+def delete(id_data):
+    #word_id = id
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(' delete from firstdict where id=%s ', (word_id))
+    cur.execute(' delete from firstdict where id=%s ', (id_data))
     conn.commit()
     cur.close()
     flash('word successfully deleted!')
 
-    return json.dumps('success')
+    return redirect(url_for('dashboard'))
 
-@app.route('/word/<id>/edit', methods=['POST'])
-def edit_word(id):
-    word_id = id
-    req = request.get_json()
-    word = req['word']
-    meaning = req['meaning']
-    if  word == ' ' or meaning == ' ':
-        flash('Please fill in all fields to update a word')
-    else:
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute(' update firstdict set word=%s, meaning=%s where id=%s ', (word, meaning, word_id))
-        conn.commit()
-        cur.close()
-        flash('word successfully updated')
-
-    return json.dumps('success')
-
+@app.route('/edit/<string:id_data>', methods=['GET', 'POST'])
+def edit(id_data):
+    #word_id = id
+    if request.method == "POST":
+        #id = request.form['id']
+        word = request.form['word']
+        meaning = request.form['meaning']
+        if  word == ' ' or meaning == ' ':
+            flash('Please fill in all fields to update a word')
+        else:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(' update firstdict set word=%s, meaning=%s where id=%s ', (word, meaning, id_data))
+            conn.commit()
+            cur.close()
+            flash('word successfully updated')
+    
+        return redirect(url_for('dashboard'))
+    
 @app.route('/add_logo', methods=['POST'])
 def add_logo():
     image = request.files['file']

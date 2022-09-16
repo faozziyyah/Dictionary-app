@@ -46,12 +46,14 @@ $( window ).on("load", function() {
 
 
     //create operation
-    $("#word-form").submit(function() {
+    /*$("#word-form").submit(function() {
+        let id = $('#id').val();
         let word = $('#word').val();
         let meaning = $('#meaning').val();
+        //let word_id = $('#word_id').val();
 
         $.ajax({
-            url: '/word',
+            url: '/insert',
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
@@ -66,9 +68,9 @@ $( window ).on("load", function() {
                 console.log(err);
             }
         })
-    });
+    });*/
 
-    // delete operation
+    /* delete operation
     $(".delete").click(function() {
         let word_id = $(this).attr('id');
 
@@ -82,7 +84,7 @@ $( window ).on("load", function() {
                 console.log(err);
             }
         });
-    });
+    });*/
 
         // update operation
         $(".edit").click(function() {
@@ -103,7 +105,7 @@ $( window ).on("load", function() {
         let meaning = parent.find('textarea').val();
         let word_id = parent.find('.submit').attr('id');
 
-        $.ajax({
+        /*$.ajax({
             url: '/word/' + word_id + '/edit',
             type: 'POST',
             dataType: 'json',
@@ -118,7 +120,7 @@ $( window ).on("load", function() {
             error: function(err) {
                 console.log(err);
             }
-        })
+        })*/
     });
 
 
