@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 app.secret_key = 'secret'
 def get_db_connection():
-  conn = psycopg2.connect("postgres://kgqrxzyrtsuoag:a84393990d6bbad0365b98b7389f64b88fb4f2d5308b31e0bda1d522faa482b8@ec2-44-205-64-253.compute-1.amazonaws.com:5432/d84mkmj7qcnmon")
+  conn = psycopg2.connect("postgres://calqpmpbmslfdx:ec3ad24844ddc4ab7f4b26b8ef18561da3a2795bbc38fbb5e7abdfc66a5540c0@ec2-35-170-21-76.compute-1.amazonaws.com:5432/dbfjnfdmvpk7f2")
   return conn
 
 @app.route('/', methods=['GET', 'POST'])
